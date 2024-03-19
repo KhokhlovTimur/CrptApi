@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CrptApi {
     private static ExecutingQueue queueService;
-    private final AtomicInteger requestsCount = new AtomicInteger(0);
     private final static ObjectMapper objectMapper = new ObjectMapper();
     private final OkHttpClient client = new OkHttpClient();
     private final int requestLimit;
@@ -73,6 +72,7 @@ public class CrptApi {
 
     private class QueueService implements ExecutingQueue {
         private final Semaphore semaphore = new Semaphore(requestLimit);
+        private final AtomicInteger requestsCount = new AtomicInteger(0);
 
         public QueueService(TimeUnit timeUnit) {
             Executors.newScheduledThreadPool(5).scheduleAtFixedRate(this::releaseAll, 1, 1, timeUnit);
